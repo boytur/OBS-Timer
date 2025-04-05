@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "OBS Timer",
   description: "Real-time countdown and stopwatch for streamers",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -19,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className="w-full mx-auto max-w-7xl">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <Toaster />

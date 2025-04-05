@@ -2,7 +2,9 @@ import { nanoid } from "nanoid"
 import clientPromise from "./mongodb"
 
 export type TimerMode = "clock" | "stopwatch" | "countdown"
-export type TimerTheme = "light" | "dark" | "green-screen"
+export type TimerTheme = "light" | "dark" | "green-screen" | "custom"
+export type TextColor = "white" | "black" | "green" | "red" | "blue" | "yellow" | "purple" | "orange"
+export type BackgroundColor = "black" | "white" | "green" | "red" | "blue" | "yellow" | "purple" | "orange" | "transparent"
 
 export interface TimerSession {
   id: string
@@ -16,6 +18,11 @@ export interface TimerSession {
   showMilliseconds: boolean
   fontSize: number
   theme: TimerTheme
+  textColor: TextColor
+  backgroundColor: BackgroundColor
+  showBorder: boolean
+  borderColor: TextColor
+  textShadow: boolean
 }
 
 export async function createTimerSession(mode: TimerMode): Promise<TimerSession> {
@@ -31,7 +38,12 @@ export async function createTimerSession(mode: TimerMode): Promise<TimerSession>
     showMilliseconds: true,
     fontSize: 48,
     theme: "dark",
-    duration: mode === "countdown" ? 5 * 60 * 1000 : undefined, // 5 minutes default
+    textColor: "white",
+    backgroundColor: "black",
+    showBorder: false,
+    borderColor: "white",
+    textShadow: false,
+    duration: mode === "countdown" ? 5 * 60 * 1000 : undefined, 
   }
 
   await db.collection("sessions").insertOne(session)

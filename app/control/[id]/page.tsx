@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
 import { TimerDisplay } from "@/components/timer-display"
-import type { TimerMode, TimerSession, TimerTheme } from "@/lib/timer-session"
+import type { BackgroundColor, TextColor, TimerMode, TimerSession, TimerTheme } from "@/lib/timer-session"
 import { Copy, Loader2, Play, Pause, RefreshCw, Clock, Timer, Hourglass } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 
@@ -142,7 +142,7 @@ export default function ControlPanel() {
     const updates: Partial<TimerSession> = {
       isRunning: false,
       startTime: undefined,
-      pausedAt: undefined,
+      pausedAt: 0,
     }
 
     updateSession(updates)
@@ -262,7 +262,7 @@ OBS Setup Instructions:
         <p className="text-muted-foreground">Manage your timer and customize its appearance</p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-[1fr_400px]">
+      <div className="grid gap-8">
         <div className="space-y-8">
           <Card>
             <CardHeader>
@@ -270,7 +270,7 @@ OBS Setup Instructions:
               <CardDescription>This is how your timer will appear in OBS</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-hidden border rounded-md">
+              <div className="overflow-hidden rounded-md min-h-[200px] border border-black">
                 <TimerDisplay
                   mode={session.mode}
                   isRunning={session.isRunning}
@@ -280,9 +280,9 @@ OBS Setup Instructions:
                   showMilliseconds={session.showMilliseconds}
                   fontSize={session.fontSize}
                   theme={session.theme}
-                  className="w-full h-[200px]"
-                />
+                  className="w-full h-[200px]" textColor={"white"} backgroundColor={"white"} showBorder={false} borderColor={"white"} textShadow={false} />
               </div>
+
             </CardContent>
           </Card>
 
@@ -381,7 +381,7 @@ OBS Setup Instructions:
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label>Timer Mode</Label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className=" flex gap-2 flex-wrap">
                   <Button
                     variant={session.mode === "clock" ? "default" : "outline"}
                     onClick={() => changeTimerMode("clock")}
@@ -475,6 +475,140 @@ OBS Setup Instructions:
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Appearance Settings</CardTitle>
+            <CardDescription>Customize your timer's look and feel</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label>Theme</Label>
+              <Select value={session.theme} onValueChange={(value) => updateSession({ theme: value as TimerTheme })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="green-screen">Green Screen</SelectItem>
+                  <SelectItem value="custom">Custom</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {session.theme === "custom" && (
+              <>
+                <div className="space-y-2">
+                  <Label>Text Color</Label>
+                  <Select value={session.textColor} onValueChange={(value) => updateSession({ textColor: value as TextColor })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select text color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="white">White</SelectItem>
+                      <SelectItem value="black">Black</SelectItem>
+                      <SelectItem value="green">Green</SelectItem>
+                      <SelectItem value="red">Red</SelectItem>
+                      <SelectItem value="blue">Blue</SelectItem>
+                      <SelectItem value="yellow">Yellow</SelectItem>
+                      <SelectItem value="purple">Purple</SelectItem>
+                      <SelectItem value="orange">Orange</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Background Color</Label>
+                  <Select value={session.backgroundColor} onValueChange={(value) => updateSession({ backgroundColor: value as BackgroundColor })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select background color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="black">Black</SelectItem>
+                      <SelectItem value="white">White</SelectItem>
+                      <SelectItem value="transparent">Transparent</SelectItem>
+                      <SelectItem value="green">Green</SelectItem>
+                      <SelectItem value="red">Red</SelectItem>
+                      <SelectItem value="blue">Blue</SelectItem>
+                      <SelectItem value="yellow">Yellow</SelectItem>
+                      <SelectItem value="purple">Purple</SelectItem>
+                      <SelectItem value="orange">Orange</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="show-border">Show Border</Label>
+                    <Switch
+                      id="show-border"
+                      checked={session.showBorder}
+                      onCheckedChange={(checked) => updateSession({ showBorder: checked })}
+                    />
+                  </div>
+                </div>
+
+                {session.showBorder && (
+                  <div className="space-y-2">
+                    <Label>Border Color</Label>
+                    <Select value={session.borderColor} onValueChange={(value) => updateSession({ borderColor: value as TextColor })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select border color" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="white">White</SelectItem>
+                        <SelectItem value="black">Black</SelectItem>
+                        <SelectItem value="green">Green</SelectItem>
+                        <SelectItem value="red">Red</SelectItem>
+                        <SelectItem value="blue">Blue</SelectItem>
+                        <SelectItem value="yellow">Yellow</SelectItem>
+                        <SelectItem value="purple">Purple</SelectItem>
+                        <SelectItem value="orange">Orange</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="text-shadow">Text Shadow</Label>
+                    <Switch
+                      id="text-shadow"
+                      checked={session.textShadow}
+                      onCheckedChange={(checked) => updateSession({ textShadow: checked })}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="show-milliseconds">Show Milliseconds</Label>
+                <Switch
+                  id="show-milliseconds"
+                  checked={session.showMilliseconds}
+                  onCheckedChange={(checked) => updateSession({ showMilliseconds: checked })}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="font-size">Font Size: {session.fontSize}px</Label>
+              </div>
+              <Slider
+                id="font-size"
+                min={24}
+                max={120}
+                step={4}
+                value={[session.fontSize]}
+                onValueChange={(value) => updateSession({ fontSize: value[0] })}
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

@@ -64,6 +64,11 @@ export default function ViewerPage() {
       fontSize={session.fontSize}
       theme={session.theme}
       className="w-full h-screen"
+      textColor={session.textColor}
+      backgroundColor="transparent"
+      showBorder={false}
+      borderColor="white"
+      textShadow={false}
     />
   )
 }
